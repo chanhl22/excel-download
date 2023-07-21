@@ -29,7 +29,7 @@ public class SXSSFExcelFile<T> {
         renderExcel(data);
     }
 
-    public void renderExcel(List<T> data) {
+    protected void renderExcel(List<T> data) {
         // 1. Create sheet and renderHeader
         sheet = workbook.createSheet();
         renderHeadersWithNewSheet(sheet, currentRowIndex++);
