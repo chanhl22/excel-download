@@ -13,7 +13,7 @@ import static excel.exceldownload.utils.ReflectionUtils.getAllFields;
 
 public class ExcelRenderResourceFactory {
 
-    public static ExcelRenderResource prepareRenderResource(Class<?> type, Workbook wb) {
+    public static ExcelRenderResource prepareRenderResource(Class<?> type, Workbook workbook) {
         Map<String, String> headerNamesMap = new LinkedHashMap<>();
         List<String> fieldNames = new ArrayList<>();
 
