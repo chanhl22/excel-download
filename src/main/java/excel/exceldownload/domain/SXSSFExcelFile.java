@@ -19,20 +19,20 @@ public class SXSSFExcelFile<T> {
     private static final int COLUMN_START_INDEX = 0;
     private int currentRowIndex = ROW_START_INDEX;
 
-    protected SXSSFWorkbook wb;
+    protected SXSSFWorkbook workbook;
     protected Sheet sheet;
     protected ExcelRenderResource resource;
 
     public SXSSFExcelFile(List<T> data, Class<T> type) {
-        this.wb = new SXSSFWorkbook();
-        this.resource = ExcelRenderResourceFactory.prepareRenderResource(type, wb);
+        this.workbook = new SXSSFWorkbook();
+        this.resource = ExcelRenderResourceFactory.prepareRenderResource(type, workbook);
         renderExcel(data);
     }
 
     public void renderExcel(List<T> data) {
         // 1. Create sheet and renderHeader
-        sheet = wb.createSheet();
-        renderHeadersWithNewSheet(sheet, currentRowIndex++, COLUMN_START_INDEX);
+        sheet = workbook.createSheet();
+        renderHeadersWithNewSheet(sheet, currentRowIndex++);
 
         if (data.isEmpty()) {
             return;
@@ -40,22 +40,22 @@ public class SXSSFExcelFile<T> {
 
         // 2. Render Body
         for (Object renderedData : data) {
-            renderBody(renderedData, currentRowIndex++, COLUMN_START_INDEX);
+            renderBody(renderedData, currentRowIndex++);
         }
     }
 
-    protected void renderHeadersWithNewSheet(Sheet sheet, int rowIndex, int columnStartIndex) {
+    protected void renderHeadersWithNewSheet(Sheet sheet, int rowIndex) {
         Row row = sheet.createRow(rowIndex);
-        int columnIndex = columnStartIndex;
+        int columnIndex = SXSSFExcelFile.COLUMN_START_INDEX;
         for (String dataFieldName : resource.getDataFieldNames()) {
             Cell cell = row.createCell(columnIndex++);
             cell.setCellValue(resource.getExcelHeaderName(dataFieldName));
         }
     }
 
-    protected void renderBody(Object data, int rowIndex, int columnStartIndex) {
+    protected void renderBody(Object data, int rowIndex) {
         Row row = sheet.createRow(rowIndex);
-        int columnIndex = columnStartIndex;
+        int columnIndex = SXSSFExcelFile.COLUMN_START_INDEX;
         for (String dataFieldName : resource.getDataFieldNames()) {
             Cell cell = row.createCell(columnIndex++);
             try {
@@ -79,9 +79,9 @@ public class SXSSFExcelFile<T> {
     }
 
     public void write(OutputStream stream) throws IOException {
-        wb.write(stream);
-        wb.close();
-        wb.dispose();
+        workbook.write(stream);
+        workbook.close();
+        workbook.dispose();
         stream.close();
     }
 }
