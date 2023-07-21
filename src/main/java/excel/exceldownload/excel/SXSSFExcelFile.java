@@ -1,5 +1,7 @@
-package excel.exceldownload.domain;
+package excel.exceldownload.excel;
 
+import excel.exceldownload.excel.resource.ExcelRenderResource;
+import excel.exceldownload.excel.resource.ExcelRenderResourceFactory;
 import excel.exceldownload.exception.ExcelInternalException;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.Row;

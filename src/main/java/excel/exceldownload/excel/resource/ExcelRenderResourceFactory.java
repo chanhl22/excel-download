@@ -1,4 +1,4 @@
-package excel.exceldownload.domain;
+package excel.exceldownload.excel.resource;
 
 import excel.exceldownload.annotation.ExcelColumn;
 import org.apache.poi.ss.usermodel.Workbook;
