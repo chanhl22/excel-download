@@ -34,5 +34,4 @@ public final class DefaultExcelBorders implements ExcelBorders {
 		borders.get(2).applyBottom(cellStyle);
 		borders.get(3).applyLeft(cellStyle);
 	}
-
 }

@@ -1,6 +1,5 @@
-package com.lannstark.style.align;
+package excel.exceldownload.excel.style.align;
 
-import excel.exceldownload.excel.style.align.ExcelAlign;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.HorizontalAlignment;
 import org.apache.poi.ss.usermodel.VerticalAlignment;
@@ -61,13 +60,4 @@ public enum DefaultExcelAlign implements ExcelAlign {
         cellStyle.setAlignment(horizontalAlignment);
         cellStyle.setVerticalAlignment(verticalAlignment);
     }
-
-    public HorizontalAlignment getHorizontalAlignment() {
-        return horizontalAlignment;
-    }
-
-    public VerticalAlignment getVerticalAlignment() {
-        return verticalAlignment;
-    }
-
 }

@@ -29,5 +29,4 @@ public final class DefaultExcelBorder implements ExcelBorder {
 	public void applyLeft(CellStyle cellStyle) {
 		cellStyle.setBorderLeft(borderStyle.getStyle());
 	}
-
 }

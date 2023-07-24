@@ -13,6 +13,7 @@ import org.apache.poi.ss.usermodel.Workbook;
 
 import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
 import java.util.LinkedHashMap;
 import java.util.List;
@@ -77,29 +78,11 @@ public class ExcelRenderResourceFactory {
 
     private static ExcelCellStyle getCellStyle(ExcelColumnStyle excelColumnStyle) {
         Class<? extends ExcelCellStyle> excelCellStyleClass = excelColumnStyle.excelCellStyleClass();
-        // 1. Case of Enum
-        if (excelCellStyleClass.isEnum()) {
-            String enumName = excelColumnStyle.enumName();
-            return findExcelCellStyle(excelCellStyleClass, enumName);
-        }
 
-        // 2. Case of Class
         try {
-            return excelCellStyleClass.newInstance();
-        } catch (InstantiationException | IllegalAccessException e) {
+            return excelCellStyleClass.getDeclaredConstructor().newInstance();
+        } catch (InvocationTargetException | InstantiationException | IllegalAccessException | NoSuchMethodException e) {
             throw new InvalidExcelCellStyleException(e.getMessage(), e);
-        }
-    }
-
-    @SuppressWarnings("unchecked")
-    private static ExcelCellStyle findExcelCellStyle(Class<?> excelCellStyles, String enumName) {
-        try {
-            return (ExcelCellStyle) Enum.valueOf((Class<Enum>) excelCellStyles, enumName);
-        } catch (NullPointerException e) {
-            throw new InvalidExcelCellStyleException("enumName must not be null", e);
-        } catch (IllegalArgumentException e) {
-            throw new InvalidExcelCellStyleException(
-                    String.format("Enum %s does not name %s", excelCellStyles.getName(), enumName), e);
         }
     }
 }
