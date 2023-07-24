@@ -5,6 +5,7 @@ import excel.exceldownload.annotation.DefaultHeaderStyle;
 import excel.exceldownload.annotation.ExcelColumn;
 import excel.exceldownload.annotation.ExcelColumnStyle;
 import excel.exceldownload.excel.style.NoExcelCellStyle;
+import excel.exceldownload.excel.style.custom.AlignCenterAndBordersThinBodyStyle;
 import excel.exceldownload.excel.style.custom.BlueHeaderStyle;
 import lombok.AllArgsConstructor;
 import lombok.NoArgsConstructor;
@@ -18,7 +19,7 @@ public class SampleExcelDto {
     @ExcelColumn(
             headerName = "번호",
             headerStyle = @ExcelColumnStyle(excelCellStyleClass = BlueHeaderStyle.class),
-            bodyStyle = @ExcelColumnStyle(excelCellStyleClass = NoExcelCellStyle.class)
+            bodyStyle = @ExcelColumnStyle(excelCellStyleClass = AlignCenterAndBordersThinBodyStyle.class)
     )
     private long id;
 
