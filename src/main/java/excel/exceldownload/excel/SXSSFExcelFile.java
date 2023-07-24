@@ -1,5 +1,6 @@
 package excel.exceldownload.excel;
 
+import excel.exceldownload.excel.resource.ExcelRenderLocation;
 import excel.exceldownload.excel.resource.ExcelRenderResource;
 import excel.exceldownload.excel.resource.ExcelRenderResourceFactory;
 import excel.exceldownload.exception.ExcelInternalException;
@@ -51,6 +52,7 @@ public class SXSSFExcelFile<T> {
         int columnIndex = SXSSFExcelFile.COLUMN_START_INDEX;
         for (String dataFieldName : resource.getDataFieldNames()) {
             Cell cell = row.createCell(columnIndex++);
+            cell.setCellStyle(resource.getCellStyle(dataFieldName, ExcelRenderLocation.HEADER));
             cell.setCellValue(resource.getExcelHeaderName(dataFieldName));
         }
     }
@@ -63,6 +65,7 @@ public class SXSSFExcelFile<T> {
             try {
                 Field field = getField(data.getClass(), dataFieldName);
                 field.setAccessible(true);
+                cell.setCellStyle(resource.getCellStyle(dataFieldName, ExcelRenderLocation.BODY));
                 Object cellValue = field.get(data);
                 renderCellValue(cell, cellValue);
             } catch (Exception e) {
