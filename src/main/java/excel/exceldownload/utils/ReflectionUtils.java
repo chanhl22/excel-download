@@ -1,5 +1,6 @@
 package excel.exceldownload.utils;
 
+import java.lang.annotation.Annotation;
 import java.lang.reflect.Field;
 import java.util.Arrays;
 import java.util.List;
@@ -18,5 +19,13 @@ public class ReflectionUtils {
             }
         }
         throw new NoSuchFieldException();
+    }
+
+    public static Annotation getAnnotation(Class<?> clazz,
+                                           Class<? extends Annotation> targetAnnotation) {
+        if (clazz.isAnnotationPresent(targetAnnotation)) {
+            return clazz.getAnnotation(targetAnnotation);
+        }
+        return null;
     }
 }

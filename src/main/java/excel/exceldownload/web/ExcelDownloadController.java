@@ -1,7 +1,7 @@
 package excel.exceldownload.web;
 
 import excel.exceldownload.domain.ExcelDownloadService;
-import excel.exceldownload.domain.SXSSFExcelFile;
+import excel.exceldownload.excel.SXSSFExcelFile;
 import excel.exceldownload.domain.dto.SampleExcelDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
