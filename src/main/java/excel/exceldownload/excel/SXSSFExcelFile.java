@@ -51,6 +51,7 @@ public class SXSSFExcelFile<T> {
         Row row = sheet.createRow(rowIndex);
         int columnIndex = SXSSFExcelFile.COLUMN_START_INDEX;
         for (String dataFieldName : resource.getDataFieldNames()) {
+            sheet.setColumnWidth(columnIndex, resource.getExcelColumnSize(dataFieldName));
             Cell cell = row.createCell(columnIndex++);
             cell.setCellStyle(resource.getCellStyle(dataFieldName, ExcelRenderLocation.HEADER));
             cell.setCellValue(resource.getExcelHeaderName(dataFieldName));
