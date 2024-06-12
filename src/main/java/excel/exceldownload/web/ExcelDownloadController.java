@@ -34,4 +34,10 @@ public class ExcelDownloadController {
         response.setHeader("Content-Disposition", "attachment;filename=example.xlsx");
         excelFile.write(response.getOutputStream());
     }
+
+    @GetMapping("/api/excel/v3")
+    public void downloadExcelV3(HttpServletResponse response) throws IOException {
+        excelDownloadService.downloadFormatExcel(response);
+    }
+
 }
