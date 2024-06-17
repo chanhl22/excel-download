@@ -1,4 +1,4 @@
-package excel.exceldownload.sample;
+package excel.exceldownload.asis.sample;
 
 import lombok.Builder;
 import lombok.Getter;

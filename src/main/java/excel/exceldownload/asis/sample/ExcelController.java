@@ -1,4 +1,4 @@
-package excel.exceldownload.sample;
+package excel.exceldownload.asis.sample;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.web.bind.annotation.GetMapping;
