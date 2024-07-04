@@ -12,6 +12,7 @@ import java.lang.annotation.Target;
 public @interface ExcelColumn {
 
     String headerName() default "";
+    int columnSize() default 20 * 256;
 
     ExcelColumnStyle headerStyle() default @ExcelColumnStyle(excelCellStyleClass = NoExcelCellStyle.class);
     ExcelColumnStyle bodyStyle() default @ExcelColumnStyle(excelCellStyleClass = NoExcelCellStyle.class);

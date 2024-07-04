@@ -27,6 +27,7 @@ public class ExcelRenderResourceFactory {
     public static ExcelRenderResource prepareRenderResource(Class<?> type, Workbook workbook) {
         PreCalculatedCellStyleMap styleMap = new PreCalculatedCellStyleMap();
         Map<String, String> headerNamesMap = new LinkedHashMap<>();
+        Map<String, Integer> columnSizesMap = new LinkedHashMap<>();
         List<String> fieldNames = new ArrayList<>();
 
         ExcelColumnStyle classDefinedHeaderStyle = getHeaderExcelColumnStyle(type);
@@ -43,13 +44,14 @@ public class ExcelRenderResourceFactory {
                         getCellStyle(decideAppliedStyleAnnotation(classDefinedBodyStyle, annotation.bodyStyle())), workbook);
                 fieldNames.add(field.getName());
                 headerNamesMap.put(field.getName(), annotation.headerName());
+                columnSizesMap.put(field.getName(), annotation.columnSize());
             }
         }
 
         if (styleMap.isEmpty()) {
             throw new NoExcelColumnAnnotationsException(String.format("Class %s has not @ExcelColumn at all", type));
         }
-        return new ExcelRenderResource(styleMap, headerNamesMap, fieldNames);
+        return new ExcelRenderResource(styleMap, headerNamesMap, columnSizesMap, fieldNames);
     }
 
     private static ExcelColumnStyle getHeaderExcelColumnStyle(Class<?> clazz) {

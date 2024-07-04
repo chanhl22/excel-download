@@ -10,13 +10,15 @@ public class ExcelRenderResource {
 
     private PreCalculatedCellStyleMap styleMap;
     private Map<String, String> excelHeaderNames;
+    private Map<String, Integer> excelColumnSizes;
     private List<String> dataFieldNames;
 
     public ExcelRenderResource(PreCalculatedCellStyleMap styleMap,
-                               Map<String, String> excelHeaderNames, List<String> dataFieldNames) {
+                               Map<String, String> excelHeaderNames, Map<String, Integer> excelColumnSizes, List<String> dataFieldNames) {
         this.styleMap = styleMap;
         this.excelHeaderNames = excelHeaderNames;
         this.dataFieldNames = dataFieldNames;
+        this.excelColumnSizes = excelColumnSizes;
     }
 
     public CellStyle getCellStyle(String dataFieldName, ExcelRenderLocation excelRenderLocation) {
@@ -25,6 +27,10 @@ public class ExcelRenderResource {
 
     public String getExcelHeaderName(String dataFieldName) {
         return excelHeaderNames.get(dataFieldName);
+    }
+
+    public Integer getExcelColumnSize(String dataFieldName) {
+        return excelColumnSizes.get(dataFieldName);
     }
 
     public List<String> getDataFieldNames() {
