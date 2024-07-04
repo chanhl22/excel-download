@@ -18,9 +18,9 @@ import static excel.exceldownload.utils.ReflectionUtils.getField;
 
 public class SXSSFExcelFile<T> {
 
-    private static final int ROW_START_INDEX = 0;
-    private static final int COLUMN_START_INDEX = 0;
-    private int currentRowIndex = ROW_START_INDEX;
+    protected static final int ROW_START_INDEX = 1;
+    protected static final int COLUMN_START_INDEX = 0;
+    protected int currentRowIndex = ROW_START_INDEX;
 
     protected SXSSFWorkbook workbook;
     protected Sheet sheet;
@@ -30,6 +30,11 @@ public class SXSSFExcelFile<T> {
         this.workbook = new SXSSFWorkbook();
         this.resource = ExcelRenderResourceFactory.prepareRenderResource(type, workbook);
         renderExcel(data);
+    }
+
+    public SXSSFExcelFile(Class<T> type) {
+        this.workbook = new SXSSFWorkbook();
+        this.resource = ExcelRenderResourceFactory.prepareRenderResource(type, workbook);
     }
 
     protected void renderExcel(List<T> data) {
@@ -75,7 +80,7 @@ public class SXSSFExcelFile<T> {
         }
     }
 
-    private void renderCellValue(Cell cell, Object cellValue) {
+    protected void renderCellValue(Cell cell, Object cellValue) {
         if (cellValue instanceof Number) {
             Number numberValue = (Number) cellValue;
             cell.setCellValue(numberValue.doubleValue());

@@ -1,6 +1,7 @@
 package excel.exceldownload.web;
 
 import excel.exceldownload.domain.ExcelDownloadService;
+import excel.exceldownload.excel.CustomSXSSFExcelFile;
 import excel.exceldownload.excel.SXSSFExcelFile;
 import excel.exceldownload.domain.dto.SampleExcelDto;
 import lombok.RequiredArgsConstructor;
@@ -38,6 +39,18 @@ public class ExcelDownloadController {
     @GetMapping("/api/excel/v3")
     public void downloadExcelV3(HttpServletResponse response) throws IOException {
         excelDownloadService.downloadFormatExcel(response);
+    }
+
+    @GetMapping("/api/excel/v4")
+    public void downloadExcelV4(HttpServletResponse response) throws IOException {
+        List<SampleExcelDto> samples = new ArrayList<>();
+        samples.add(new SampleExcelDto(0L, "1번 이름", "1번 제목"));
+        samples.add(new SampleExcelDto(1L, "2번 이름", "2번 제목"));
+
+        SXSSFExcelFile<SampleExcelDto> excelFile = new CustomSXSSFExcelFile<>("타이틀임", samples, SampleExcelDto.class);
+        response.setContentType("ms-vnd/excel");
+        response.setHeader("Content-Disposition", "attachment;filename=example.xlsx");
+        excelFile.write(response.getOutputStream());
     }
 
 }
