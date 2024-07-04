@@ -23,7 +23,11 @@ public class SampleExcelDto {
     )
     private long id;
 
-    @ExcelColumn(headerName = "이름")
+    @ExcelColumn(
+            headerName = "이름",
+            columnSize = 20 * 256 + 100,
+            headerStyle = @ExcelColumnStyle(excelCellStyleClass = BlueHeaderStyle.class)
+    )
     private String name;
 
     @ExcelColumn(headerName = "제목")
