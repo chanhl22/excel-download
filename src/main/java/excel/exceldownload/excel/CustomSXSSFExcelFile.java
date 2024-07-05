@@ -9,8 +9,8 @@ public class CustomSXSSFExcelFile<T> extends SXSSFExcelFile<T> {
 
     private final String title;
 
-    public CustomSXSSFExcelFile(String title, List<T> data, Class<T> type) {
-        super(type);
+    public CustomSXSSFExcelFile(String title, int rowStart, int columnStart, List<T> data, Class<T> type) {
+        super(type, rowStart + 1, columnStart);
         this.title = title;
         renderExcel(data);
     }
@@ -34,7 +34,7 @@ public class CustomSXSSFExcelFile<T> extends SXSSFExcelFile<T> {
 
     private void renderTitle(Sheet sheet, int rowIndex) {
         Row row = sheet.createRow(rowIndex);
-        int columnIndex = COLUMN_START_INDEX;
+        int columnIndex = currentColumnIndex;
 
         CellStyle cellStyle = workbook.createCellStyle();
         cellStyle.setBorderRight(BorderStyle.THIN);
@@ -48,7 +48,7 @@ public class CustomSXSSFExcelFile<T> extends SXSSFExcelFile<T> {
             renderCellValue(cell, title);
         }
 
-        CellRangeAddress cellRange = new CellRangeAddress(rowIndex, rowIndex, COLUMN_START_INDEX, columnIndex - 1);
+        CellRangeAddress cellRange = new CellRangeAddress(rowIndex, rowIndex, currentColumnIndex, columnIndex - 1);
         sheet.addMergedRegion(cellRange);
     }
 

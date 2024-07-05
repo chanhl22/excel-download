@@ -47,7 +47,7 @@ public class ExcelDownloadController {
         samples.add(new SampleExcelDto(0L, "1번 이름", "1번 제목"));
         samples.add(new SampleExcelDto(1L, "2번 이름", "2번 제목"));
 
-        SXSSFExcelFile<SampleExcelDto> excelFile = new CustomSXSSFExcelFile<>("타이틀임", samples, SampleExcelDto.class);
+        SXSSFExcelFile<SampleExcelDto> excelFile = new CustomSXSSFExcelFile<>("타이틀", 2, 2, samples, SampleExcelDto.class);
         response.setContentType("ms-vnd/excel");
         response.setHeader("Content-Disposition", "attachment;filename=example.xlsx");
         excelFile.write(response.getOutputStream());
