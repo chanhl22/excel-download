@@ -21,7 +21,7 @@ public class SXSSFExcelFile<T> {
     protected static final int ROW_START_INDEX = 0;
     protected static final int COLUMN_START_INDEX = 0;
     protected int currentRowIndex = ROW_START_INDEX;
-    protected int currentColumnIndex = COLUMN_START_INDEX;
+    protected int startColumnIndex = COLUMN_START_INDEX;
 
     protected SXSSFWorkbook workbook;
     protected Sheet sheet;
@@ -35,7 +35,7 @@ public class SXSSFExcelFile<T> {
 
     public SXSSFExcelFile(Class<T> type, int rowStart, int columnStart) {
         currentRowIndex = rowStart;
-        currentColumnIndex = columnStart;
+        startColumnIndex = columnStart;
         this.workbook = new SXSSFWorkbook();
         this.resource = ExcelRenderResourceFactory.prepareRenderResource(type, workbook);
     }
@@ -57,7 +57,7 @@ public class SXSSFExcelFile<T> {
 
     protected void renderHeadersWithNewSheet(Sheet sheet, int rowIndex) {
         Row row = sheet.createRow(rowIndex);
-        int columnIndex = currentColumnIndex;
+        int columnIndex = startColumnIndex;
         for (String dataFieldName : resource.getDataFieldNames()) {
             sheet.setColumnWidth(columnIndex, resource.getExcelColumnSize(dataFieldName));
             Cell cell = row.createCell(columnIndex++);
@@ -68,7 +68,7 @@ public class SXSSFExcelFile<T> {
 
     protected void renderBody(Object data, int rowIndex) {
         Row row = sheet.createRow(rowIndex);
-        int columnIndex = currentColumnIndex;
+        int columnIndex = startColumnIndex;
         for (String dataFieldName : resource.getDataFieldNames()) {
             Cell cell = row.createCell(columnIndex++);
             try {

@@ -30,11 +30,13 @@ public class CustomSXSSFExcelFile<T> extends SXSSFExcelFile<T> {
         for (Object renderedData : data) {
             renderBody(renderedData, currentRowIndex++);
         }
+
+        mergeBody();
     }
 
     private void renderTitle(Sheet sheet, int rowIndex) {
         Row row = sheet.createRow(rowIndex);
-        int columnIndex = currentColumnIndex;
+        int columnIndex = startColumnIndex;
 
         CellStyle cellStyle = workbook.createCellStyle();
         cellStyle.setBorderRight(BorderStyle.THIN);
@@ -48,8 +50,30 @@ public class CustomSXSSFExcelFile<T> extends SXSSFExcelFile<T> {
             renderCellValue(cell, title);
         }
 
-        CellRangeAddress cellRange = new CellRangeAddress(rowIndex, rowIndex, currentColumnIndex, columnIndex - 1);
+        CellRangeAddress cellRange = new CellRangeAddress(rowIndex, rowIndex, startColumnIndex, columnIndex - 1);
         sheet.addMergedRegion(cellRange);
     }
+
+    private void mergeBody() {
+        for (int columnIndex = startColumnIndex; columnIndex < startColumnIndex + 2; columnIndex++) {
+            int standardRowIndex = sheet.getFirstRowNum() + 2;
+            for (int rowIndex = sheet.getFirstRowNum() + 2; rowIndex < sheet.getLastRowNum(); rowIndex++) {
+                Row row1 = sheet.getRow(rowIndex);
+                Row row2 = sheet.getRow(rowIndex + 1);
+                Cell cell1 = row1.getCell(columnIndex);
+                Cell cell2 = row2.getCell(columnIndex);
+                if (!cell1.getStringCellValue().equals(cell2.getStringCellValue())) {
+                    sheet.addMergedRegion(new CellRangeAddress(standardRowIndex, rowIndex, columnIndex, columnIndex));
+                    standardRowIndex = rowIndex + 1;
+                }
+
+                if (rowIndex == sheet.getLastRowNum() - 1) {
+                    sheet.addMergedRegion(new CellRangeAddress(standardRowIndex, sheet.getLastRowNum(), columnIndex, columnIndex));
+                }
+            }
+        }
+    }
+
+
 
 }

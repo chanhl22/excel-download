@@ -1,6 +1,7 @@
 package excel.exceldownload.web;
 
 import excel.exceldownload.domain.ExcelDownloadService;
+import excel.exceldownload.domain.dto.FormatSampleExcelDto;
 import excel.exceldownload.excel.CustomSXSSFExcelFile;
 import excel.exceldownload.excel.SXSSFExcelFile;
 import excel.exceldownload.domain.dto.SampleExcelDto;
@@ -43,11 +44,17 @@ public class ExcelDownloadController {
 
     @GetMapping("/api/excel/v4")
     public void downloadExcelV4(HttpServletResponse response) throws IOException {
-        List<SampleExcelDto> samples = new ArrayList<>();
-        samples.add(new SampleExcelDto(0L, "1번 이름", "1번 제목"));
-        samples.add(new SampleExcelDto(1L, "2번 이름", "2번 제목"));
+        List<FormatSampleExcelDto> samples = new ArrayList<>();
+        samples.add(new FormatSampleExcelDto("기업규모", "대기업", "Count", 45, 42, 87));
+        samples.add(new FormatSampleExcelDto("기업규모", "대기업", "% Within 기업 규모", 45, 42, 87));
+        samples.add(new FormatSampleExcelDto("기업규모", "중견.중소기업", "Count", 45, 42, 87));
+        samples.add(new FormatSampleExcelDto("기업규모", "중견.중소기업", "% Within 기업 규모", 45, 42, 87));
+        samples.add(new FormatSampleExcelDto("수출비중", "수출기업", "Count", 45, 42, 87));
+        samples.add(new FormatSampleExcelDto("수출비중", "수출기업", "% Within 기업 규모", 45, 42, 87));
+        samples.add(new FormatSampleExcelDto("수출비중", "내수기업", "Count", 45, 42, 87));
+        samples.add(new FormatSampleExcelDto("수출비중", "내수기업", "% Within 기업 규모", 45, 42, 87));
 
-        SXSSFExcelFile<SampleExcelDto> excelFile = new CustomSXSSFExcelFile<>("타이틀", 2, 2, samples, SampleExcelDto.class);
+        SXSSFExcelFile<FormatSampleExcelDto> excelFile = new CustomSXSSFExcelFile<>("타이틀", 2, 2, samples, FormatSampleExcelDto.class);
         response.setContentType("ms-vnd/excel");
         response.setHeader("Content-Disposition", "attachment;filename=example.xlsx");
         excelFile.write(response.getOutputStream());
