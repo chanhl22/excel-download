@@ -1,6 +1,10 @@
 package excel.exceldownload.excel;
 
-import org.apache.poi.ss.usermodel.BorderStyle;
+import excel.exceldownload.excel.style.align.DefaultExcelAlign;
+import excel.exceldownload.excel.style.align.ExcelAlign;
+import excel.exceldownload.excel.style.border.DefaultExcelBorders;
+import excel.exceldownload.excel.style.border.ExcelBorderStyle;
+import excel.exceldownload.excel.style.border.ExcelBorders;
 import org.apache.poi.ss.usermodel.Cell;
 import org.apache.poi.ss.usermodel.CellStyle;
 import org.apache.poi.ss.usermodel.Row;
@@ -42,7 +46,8 @@ public class CustomSXSSFExcelFile<T> extends SXSSFExcelFile<T> {
         // 3. Render Title
         renderTitle();
 
-        // 4. Merge Body
+        // 4. Merge Header & Body
+        mergeHeader();
         mergeBody();
     }
 
@@ -51,10 +56,10 @@ public class CustomSXSSFExcelFile<T> extends SXSSFExcelFile<T> {
         int columnIndex = COLUMN_START_INDEX;
 
         CellStyle cellStyle = workbook.createCellStyle();
-        cellStyle.setBorderRight(BorderStyle.THIN);
-        cellStyle.setBorderLeft(BorderStyle.THIN);
-        cellStyle.setBorderTop(BorderStyle.THIN);
-        cellStyle.setBorderBottom(BorderStyle.THIN);
+        ExcelBorders excelBorders = DefaultExcelBorders.newInstance(ExcelBorderStyle.THIN);
+        excelBorders.apply(cellStyle);
+        ExcelAlign excelAlign = DefaultExcelAlign.LEFT_CENTER;
+        excelAlign.apply(cellStyle);
 
         for (String ignored : resource.getDataFieldNames()) {
             Cell cell = row.createCell(columnIndex++);
@@ -63,6 +68,11 @@ public class CustomSXSSFExcelFile<T> extends SXSSFExcelFile<T> {
         }
 
         CellRangeAddress cellRange = new CellRangeAddress(ROW_START_INDEX, ROW_START_INDEX, COLUMN_START_INDEX, columnIndex - 1);
+        sheet.addMergedRegion(cellRange);
+    }
+
+    private void mergeHeader() {
+        CellRangeAddress cellRange = new CellRangeAddress(ROW_START_INDEX + 1, ROW_START_INDEX + 1, COLUMN_START_INDEX, COLUMN_START_INDEX + 2);
         sheet.addMergedRegion(cellRange);
     }
 
