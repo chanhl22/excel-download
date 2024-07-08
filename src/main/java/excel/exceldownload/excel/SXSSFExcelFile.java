@@ -18,9 +18,9 @@ import static excel.exceldownload.utils.ReflectionUtils.getField;
 
 public class SXSSFExcelFile<T> {
 
-    protected static final int ROW_START_INDEX = 0;
-    protected static final int COLUMN_START_INDEX = 0;
-    protected int currentRowIndex = ROW_START_INDEX;
+    private static final int ROW_START_INDEX = 0;
+    private static final int COLUMN_START_INDEX = 0;
+    private int currentRowIndex = ROW_START_INDEX;
 
     protected SXSSFWorkbook workbook;
     protected Sheet sheet;
