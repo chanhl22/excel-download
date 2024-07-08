@@ -32,10 +32,15 @@ public class SXSSFExcelFile<T> {
         renderExcel(data);
     }
 
+    public SXSSFExcelFile(Class<T> type) {
+        this.workbook = new SXSSFWorkbook();
+        this.resource = ExcelRenderResourceFactory.prepareRenderResource(type, workbook);
+    }
+
     protected void renderExcel(List<T> data) {
         // 1. Create sheet and renderHeader
         sheet = workbook.createSheet();
-        renderHeadersWithNewSheet(sheet, currentRowIndex++);
+        renderHeadersWithNewSheet(currentRowIndex++, COLUMN_START_INDEX);
 
         if (data.isEmpty()) {
             return;
@@ -43,13 +48,13 @@ public class SXSSFExcelFile<T> {
 
         // 2. Render Body
         for (Object renderedData : data) {
-            renderBody(renderedData, currentRowIndex++);
+            renderBody(renderedData, currentRowIndex++, COLUMN_START_INDEX);
         }
     }
 
-    protected void renderHeadersWithNewSheet(Sheet sheet, int rowIndex) {
+    protected void renderHeadersWithNewSheet(int rowIndex, int startColumnIndex) {
         Row row = sheet.createRow(rowIndex);
-        int columnIndex = SXSSFExcelFile.COLUMN_START_INDEX;
+        int columnIndex = startColumnIndex;
         for (String dataFieldName : resource.getDataFieldNames()) {
             sheet.setColumnWidth(columnIndex, resource.getExcelColumnSize(dataFieldName));
             Cell cell = row.createCell(columnIndex++);
@@ -58,9 +63,9 @@ public class SXSSFExcelFile<T> {
         }
     }
 
-    protected void renderBody(Object data, int rowIndex) {
+    protected void renderBody(Object data, int rowIndex, int startColumnIndex) {
         Row row = sheet.createRow(rowIndex);
-        int columnIndex = SXSSFExcelFile.COLUMN_START_INDEX;
+        int columnIndex = startColumnIndex;
         for (String dataFieldName : resource.getDataFieldNames()) {
             Cell cell = row.createCell(columnIndex++);
             try {
@@ -75,7 +80,7 @@ public class SXSSFExcelFile<T> {
         }
     }
 
-    private void renderCellValue(Cell cell, Object cellValue) {
+    protected void renderCellValue(Cell cell, Object cellValue) {
         if (cellValue instanceof Number) {
             Number numberValue = (Number) cellValue;
             cell.setCellValue(numberValue.doubleValue());
@@ -90,4 +95,5 @@ public class SXSSFExcelFile<T> {
         workbook.dispose();
         stream.close();
     }
+
 }
