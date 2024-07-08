@@ -21,7 +21,6 @@ public class SXSSFExcelFile<T> {
     protected static final int ROW_START_INDEX = 0;
     protected static final int COLUMN_START_INDEX = 0;
     protected int currentRowIndex = ROW_START_INDEX;
-    protected int startColumnIndex = COLUMN_START_INDEX;
 
     protected SXSSFWorkbook workbook;
     protected Sheet sheet;
@@ -33,9 +32,7 @@ public class SXSSFExcelFile<T> {
         renderExcel(data);
     }
 
-    public SXSSFExcelFile(Class<T> type, int rowStart, int columnStart) {
-        currentRowIndex = rowStart;
-        startColumnIndex = columnStart;
+    public SXSSFExcelFile(Class<T> type) {
         this.workbook = new SXSSFWorkbook();
         this.resource = ExcelRenderResourceFactory.prepareRenderResource(type, workbook);
     }
@@ -43,7 +40,7 @@ public class SXSSFExcelFile<T> {
     protected void renderExcel(List<T> data) {
         // 1. Create sheet and renderHeader
         sheet = workbook.createSheet();
-        renderHeadersWithNewSheet(sheet, currentRowIndex++);
+        renderHeadersWithNewSheet(currentRowIndex++, COLUMN_START_INDEX);
 
         if (data.isEmpty()) {
             return;
@@ -51,11 +48,11 @@ public class SXSSFExcelFile<T> {
 
         // 2. Render Body
         for (Object renderedData : data) {
-            renderBody(renderedData, currentRowIndex++);
+            renderBody(renderedData, currentRowIndex++, COLUMN_START_INDEX);
         }
     }
 
-    protected void renderHeadersWithNewSheet(Sheet sheet, int rowIndex) {
+    protected void renderHeadersWithNewSheet(int rowIndex, int startColumnIndex) {
         Row row = sheet.createRow(rowIndex);
         int columnIndex = startColumnIndex;
         for (String dataFieldName : resource.getDataFieldNames()) {
@@ -66,7 +63,7 @@ public class SXSSFExcelFile<T> {
         }
     }
 
-    protected void renderBody(Object data, int rowIndex) {
+    protected void renderBody(Object data, int rowIndex, int startColumnIndex) {
         Row row = sheet.createRow(rowIndex);
         int columnIndex = startColumnIndex;
         for (String dataFieldName : resource.getDataFieldNames()) {
@@ -98,4 +95,5 @@ public class SXSSFExcelFile<T> {
         workbook.dispose();
         stream.close();
     }
+
 }

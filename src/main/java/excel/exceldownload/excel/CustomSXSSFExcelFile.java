@@ -1,16 +1,25 @@
 package excel.exceldownload.excel;
 
-import org.apache.poi.ss.usermodel.*;
+import org.apache.poi.ss.usermodel.BorderStyle;
+import org.apache.poi.ss.usermodel.Cell;
+import org.apache.poi.ss.usermodel.CellStyle;
+import org.apache.poi.ss.usermodel.Row;
 import org.apache.poi.ss.util.CellRangeAddress;
 
 import java.util.List;
 
 public class CustomSXSSFExcelFile<T> extends SXSSFExcelFile<T> {
 
+    private final int ROW_START_INDEX;
+    private final int COLUMN_START_INDEX;
+    private int currentRowIndex;
     private final String title;
 
     public CustomSXSSFExcelFile(String title, int rowStart, int columnStart, List<T> data, Class<T> type) {
-        super(type, rowStart + 1, columnStart);
+        super(type);
+        this.ROW_START_INDEX = rowStart;
+        this.COLUMN_START_INDEX = columnStart;
+        this.currentRowIndex = rowStart + 1;
         this.title = title;
         renderExcel(data);
     }
@@ -19,8 +28,7 @@ public class CustomSXSSFExcelFile<T> extends SXSSFExcelFile<T> {
     protected void renderExcel(List<T> data) {
         // 1. Create sheet and renderHeader
         sheet = workbook.createSheet();
-        renderTitle(sheet, currentRowIndex - 1);
-        renderHeadersWithNewSheet(sheet, currentRowIndex++);
+        renderHeadersWithNewSheet(currentRowIndex++, COLUMN_START_INDEX);
 
         if (data.isEmpty()) {
             return;
@@ -28,15 +36,19 @@ public class CustomSXSSFExcelFile<T> extends SXSSFExcelFile<T> {
 
         // 2. Render Body
         for (Object renderedData : data) {
-            renderBody(renderedData, currentRowIndex++);
+            renderBody(renderedData, currentRowIndex++, COLUMN_START_INDEX);
         }
 
+        // 3. Render Title
+        renderTitle();
+
+        // 4. Merge Body
         mergeBody();
     }
 
-    private void renderTitle(Sheet sheet, int rowIndex) {
-        Row row = sheet.createRow(rowIndex);
-        int columnIndex = startColumnIndex;
+    private void renderTitle() {
+        Row row = sheet.createRow(ROW_START_INDEX);
+        int columnIndex = COLUMN_START_INDEX;
 
         CellStyle cellStyle = workbook.createCellStyle();
         cellStyle.setBorderRight(BorderStyle.THIN);
@@ -50,30 +62,40 @@ public class CustomSXSSFExcelFile<T> extends SXSSFExcelFile<T> {
             renderCellValue(cell, title);
         }
 
-        CellRangeAddress cellRange = new CellRangeAddress(rowIndex, rowIndex, startColumnIndex, columnIndex - 1);
+        CellRangeAddress cellRange = new CellRangeAddress(ROW_START_INDEX, ROW_START_INDEX, COLUMN_START_INDEX, columnIndex - 1);
         sheet.addMergedRegion(cellRange);
     }
 
     private void mergeBody() {
-        for (int columnIndex = startColumnIndex; columnIndex < startColumnIndex + 2; columnIndex++) {
-            int standardRowIndex = sheet.getFirstRowNum() + 2;
-            for (int rowIndex = sheet.getFirstRowNum() + 2; rowIndex < sheet.getLastRowNum(); rowIndex++) {
-                Row row1 = sheet.getRow(rowIndex);
-                Row row2 = sheet.getRow(rowIndex + 1);
-                Cell cell1 = row1.getCell(columnIndex);
-                Cell cell2 = row2.getCell(columnIndex);
-                if (!cell1.getStringCellValue().equals(cell2.getStringCellValue())) {
-                    sheet.addMergedRegion(new CellRangeAddress(standardRowIndex, rowIndex, columnIndex, columnIndex));
-                    standardRowIndex = rowIndex + 1;
-                }
+        int startRowNum = sheet.getFirstRowNum() + 2;
+        int lastRowNum = sheet.getLastRowNum();
+        int startColNum = sheet.getRow(startRowNum).getFirstCellNum();
+        int lastColNum = startColNum + 3;
 
-                if (rowIndex == sheet.getLastRowNum() - 1) {
-                    sheet.addMergedRegion(new CellRangeAddress(standardRowIndex, sheet.getLastRowNum(), columnIndex, columnIndex));
+        for (int col = startColNum; col < lastColNum; col++) {
+            String prevValue = null;
+            int startRow = -1;
+
+            for (int row = startRowNum; row <= lastRowNum; row++) {
+                Row currentRow = sheet.getRow(row);
+                if (currentRow != null) {
+                    Cell currentCell = currentRow.getCell(col);
+                    String currentValue = currentCell != null ? currentCell.getStringCellValue() : "";
+
+                    if (!currentValue.equals(prevValue)) {
+                        if (startRow != -1 && startRow != row - 1) {
+                            sheet.addMergedRegion(new CellRangeAddress(startRow, row - 1, col, col));
+                        }
+                        startRow = row;
+                        prevValue = currentValue;
+                    }
                 }
+            }
+
+            if (startRow != -1 && startRow != lastRowNum) {
+                sheet.addMergedRegion(new CellRangeAddress(startRow, lastRowNum, col, col));
             }
         }
     }
-
-
 
 }
