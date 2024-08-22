@@ -1,10 +1,10 @@
 package excel.exceldownload.domain.dto;
 
-import excel.exceldownload.annotation.DefaultBodyStyle;
-import excel.exceldownload.annotation.DefaultHeaderStyle;
-import excel.exceldownload.annotation.ExcelColumn;
-import excel.exceldownload.annotation.ExcelColumnStyle;
-import excel.exceldownload.excel.style.custom.AlignCenterAndBordersThinBodyStyle;
+import excel.exceldownload.main.annotation.DefaultBodyStyle;
+import excel.exceldownload.main.annotation.DefaultHeaderStyle;
+import excel.exceldownload.main.annotation.ExcelColumn;
+import excel.exceldownload.main.annotation.ExcelColumnStyle;
+import excel.exceldownload.main.excel.style.custom.AlignCenterAndBordersThinBodyStyle;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;

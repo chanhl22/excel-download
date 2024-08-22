@@ -2,8 +2,10 @@ package excel.exceldownload.web;
 
 import excel.exceldownload.domain.ExcelDownloadService;
 import excel.exceldownload.domain.dto.FormatSampleExcelDto;
-import excel.exceldownload.excel.CustomSXSSFExcelFile;
-import excel.exceldownload.excel.SXSSFExcelFile;
+import excel.exceldownload.dynamic.SXSSFExcelFileCreator;
+import excel.exceldownload.dynamic.dto.SurveyResultDetailExcelDownloadDto;
+import excel.exceldownload.main.excel.CustomSXSSFExcelFile;
+import excel.exceldownload.main.excel.SXSSFExcelFile;
 import excel.exceldownload.domain.dto.SampleExcelDto;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Controller;
@@ -11,8 +13,11 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
+import java.lang.reflect.InvocationTargetException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 @Controller
 @RequiredArgsConstructor
@@ -58,6 +63,22 @@ public class ExcelDownloadController {
         response.setContentType("ms-vnd/excel");
         response.setHeader("Content-Disposition", "attachment;filename=example.xlsx");
         excelFile.write(response.getOutputStream());
+    }
+
+    @GetMapping("/api/excel/v5")
+    public void downloadExcelV5(HttpServletResponse response) throws IOException, InvocationTargetException, IllegalAccessException, NoSuchMethodException, InstantiationException {
+        Map<String, Object> map1 = new HashMap<>();
+        map1.put("질문1", "응답1");
+        map1.put("질문2", "응답2");
+        Map<String, Object> map2 = new HashMap<>();
+        map2.put("질문1", "새로운 응답1");
+        map2.put("질문2", "새로운 응답2");
+        SurveyResultDetailExcelDownloadDto result = SurveyResultDetailExcelDownloadDto.builder(List.of("질문1", "질문2"), List.of(map1, map2)).build();
+
+        SXSSFExcelFileCreator<SurveyResultDetailExcelDownloadDto> sxssfExcelFileCreator = new SXSSFExcelFileCreator<>(result, SurveyResultDetailExcelDownloadDto.class);
+        response.setContentType("application/vnd.openxmlformats-officedocument.spreadsheetml.sheet; charset=UTF-8");
+        response.setHeader("Content-Disposition", "attachment;filename=example.xlsx");
+        sxssfExcelFileCreator.write(response.getOutputStream());
     }
 
 }
